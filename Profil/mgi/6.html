@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil App Ultimate</title>
+
+<style>
+:root{
+  --bg:#f3f3f3;
+  --card:#ffffff;
+  --text:#222;
+  --sub:#666;
+  --primary:#008f;
+}
+.dark{
+  --bg:#121212;
+  --card:#1f1f1f;
+  --text:#ffffff;
+  --sub:#aaaaaa;
+  --primary:#000ff0;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:var(--bg);color:var(--text);overflow:hidden}
+
+/* SPLASH */
+#splash{
+  position:fixed;inset:0;
+  background:linear-gradient(135deg,#4facfe,#00fe);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  color:white;font-size:26px;font-weight:bold;
+  z-index:10;
+}
+#splash span{font-size:14px;margin-top:10px}
+
+/* APP */
+#app{display:none;height:100vh}
+
+/* HEADER */
+.header{
+  background:var(--primary);
+  color:white;
+  padding:15px;
+  text-align:center;
+  font-size:18px;
+  font-weight:bold;
+}
+
+/* CONTENT */
+.content{
+  padding:15px;
+  height:calc(100vh - 120px);
+  overflow:hidden;
+}
+
+/* PAGE */
+.page{
+  display:none;
+  height:100%;
+  overflow-y:auto;
+  animation:fade .3s ease;
+}
+.page.active{display:block}
+
+@keyframes fade{
+  from{opacity:0;transform:translateX(30px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+
+/* PROFILE */
+.profile{text-align:center}
+.profile img{
+  width:100px;height:100px;border-radius:50%;
+  border:4px solid var(--primary);object-fit:cover
+}
+.profile p{color:var(--sub)}
+
+/* MENU */
+.menu{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+.menu .item{
+  background:var(--card);
+  padding:20px;border-radius:18px;
+  text-align:center;
+  box-shadow:0 4px 8px rgba(0,0,0,.12);
+}
+
+/* GALERI */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.gallery img{
+  width:100%;
+  border-radius:12px;
+}
+
+/* TOGGLE */
+.toggle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--card);
+  display:flex;justify-content:space-around;
+  padding:10px 0;
+  box-shadow:0 -3px 10px rgba(0,0,0,.2);
+}
+.navbar button{
+  background:none;border:none;
+  color:var(--sub);font-size:14px;
+}
+.navbar button.active{
+  color:var(--primary);
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  Profil App
+  <span>Loading...</span>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+<div class="header">Profil App</div>
+
+<div class="content" id="content">
+
+<!-- HOME -->
+<div class="page active" id="home">
+  <div class="card profile">
+    <img src="../mgi/z.jpg">
+    <h2>GALANG AHMAD FAUZI</h2>
+    <p>Pelajar | App Builder</p>
+  </div>
+  <div class="menu">
+    <div class="item">👤<br>Profil</div>
+    <div class="item">🖼️<br>Galeri</div>
+    <div class="item">💬<br>Pesan</div>
+    <div class="item">⚙️<br>Setting</div>
+  </div>
+</div>
+
+<!-- PROFIL -->
+<div class="page" id="profil">
+  <div class="card">
+    <h3>👤 Tentang Saya</h3>
+    <p>Saya belajar membuat aplikasi web mirip Android menggunakan HTML, CSS, dan JavaScript di Acode.</p>
+  </div>
+</div>
+
+<!-- GALERI -->
+<div class="page" id="galeri">
+  <div class="card">
+    <h3>🖼️ Galeri</h3>
+    <div class="gallery">
+      <img src="../mgi/v.jpg">
+      <img src="../mgi/y.jpg">
+      <img src="../mgi/x.jpg">
+    </div>
+  </div>
+</div>
+
+<!-- PESAN -->
+<div class="page" id="pesan">
+  <div class="card">
+    <h3>💬 PESAN </h3>
+    <p>Hidup mengajarkan kita untuk kuat, bukan karena segalanya mudah, tapi karena kita belajar sabar dan bersyukur..</p>
+  </div>
+</div>
+
+<!-- SETTING -->
+<div class="page" id="setting">
+  <div class="card toggle">
+    <span>🌙 Dark Mode</span>
+    <input type="checkbox" onchange="toggleDark()">
+  </div>
+</div>
+
+</div>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <button class="active" onclick="openPage('home',this)">🏠<br>Home</button>
+  <button onclick="openPage('profil',this)">👤<br>Profil</button>
+  <button onclick="openPage('galeri',this)">🖼️<br>Galeri</button>
+  <button onclick="openPage('setting',this)">⚙️<br>Setting</button>
+</div>
+
+</div>
+
+<script>
+// SPLASH
+setTimeout(()=>{
+  splash.style.display="none";
+  app.style.display="block";
+},2000);
+
+// PAGE CONTROL
+let pages=["home","profil","galeri","pesan","setting"];
+let index=0;
+
+function openPage(id,btn){
+  pages.forEach(p=>document.getElementById(p)?.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".navbar button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  index=pages.indexOf(id);
+}
+
+// SWIPE
+let startX=0;
+content.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+content.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(startX-endX>50 && index<pages.length-1) index++;
+  if(endX-startX>50 && index>0) index--;
+  pages.forEach(p=>document.getElementById(p)?.classList.remove("active"));
+  document.getElementById(pages[index]).classList.add("active");
+});
+
+// DARK MODE SAVE
+if(localStorage.getItem("dark")==="on") document.body.classList.add("dark");
+function toggleDark(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark",document.body.classList.contains("dark")?"on":"off");
+}
+</script>
+
+</body>
+</html>
