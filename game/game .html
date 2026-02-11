@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Tebak-Tebakkan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        #soal {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        #jawaban-user {
+            width: 80%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #btn-jawab {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #btn-jawab:hover {
+            background-color: #2980b9;
+        }
+
+        #btn-ulang {
+            background-color: #2ecc71;
+            color: white;
+            margin-top: 15px;
+            display: none;
+        }
+
+        #btn-ulang:hover {
+            background-color: #27ae60;
+        }
+
+        #feedback {
+            margin: 15px 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        #skor {
+            font-size: 1.1rem;
+            color: #27ae60;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎮 GAME TEBAK-TEBAKKAN</h1>
+        <div id="soal"></div>
+        <input type="text" id="jawaban-user" placeholder="Tulis jawabanmu di sini...">
+        <button id="btn-jawab">Kirim Jawaban</button>
+        <div id="feedback"></div>
+        <div id="skor"></div>
+        <button id="btn-ulang">Mulai Ulang Game</button>
+    </div>
+
+    <script>
+        // Daftar pertanyaan dan jawaban
+        const daftarSoal = [
+            { pertanyaan: "Apa nama ibukota Indonesia?", jawaban: "jakarta" },
+            { pertanyaan: "Hewan apa yang punya leher paling panjang?", jawaban: "jerapah" },
+            { pertanyaan: "Buah apa yang warnanya merah dan bentuknya bulat kecil?", jawaban: "ceri" },
+            { pertanyaan: "Apa warna langit saat cuaca cerah?", jawaban: "biru" },
+            { pertanyaan: "Negara mana yang punya Menara Eiffel?", jawaban: "prancis" },
+            { pertanyaan: "Siapa tokoh nasional Indonesia yang dikenal sebagai Bung Karno?", jawaban: "soekarno" },
+            { pertanyaan: "Apa nama gunung tertinggi di Indonesia?", jawaban: "semeru" }
+        ];
+
+        // Elemen DOM
+        const elSoal = document.getElementById('soal');
+        const elJawaban = document.getElementById('jawaban-user');
+        const elBtnJawab = document.getElementById('btn-jawab');
+        const elFeedback = document.getElementById('feedback');
+        const elSkor = document.getElementById('skor');
+        const elBtnUlang = document.getElementById('btn-ulang');
+
+        // Variabel game
+        let soalSekarang;
+        let skor = 0;
+        let indeksSoal = 0;
+        let soalAcak = [];
+
+        // Fungsi acak urutan soal
+        function acakSoal() {
+            soalAcak = [...daftarSoal].sort(() => Math.random() - 0.5);
+        }
+
+        // Fungsi tampilkan soal berikutnya
+        function tampilkanSoal() {
+            if (indeksSoal < soalAcak.length) {
+                soalSekarang = soalAcak[indeksSoal];
+                elSoal.textContent = `Soal ${indeksSoal + 1}: ${soalSekarang.pertanyaan}`;
+                elJawaban.value = '';
+                elFeedback.textContent = '';
+            } else {
+                // Game selesai
+                elSoal.textContent = "✨ GAME SELESAI!";
+                elJawaban.style.display = 'none';
+                elBtnJawab.style.display = 'none';
+                elFeedback.textContent = `Skor Akhir: ${skor} dari ${soalAcak.length * 10}`;
+                elBtnUlang.style.display = 'inline-block';
+                
+                if (skor === soalAcak.length * 10) {
+                    elFeedback.style.color = '#9b59b6';
+                } else if (skor >= soalAcak.length * 5) {
+                    elFeedback.style.color = '#27ae60';
+                } else {
+                    elFeedback.style.color = '#e67e22';
+                }
+            }
+        }
+
+        // Fungsi cek jawaban
+        function cekJawaban() {
+            const jawabanUser = elJawaban.value.toLowerCase().trim();
+            
+            if (jawabanUser === '') {
+                elFeedback.textContent = "⚠️ Mohon tulis jawaban dulu!";
+                elFeedback.style.color = '#e74c3c';
+                return;
+            }
+
+            if (jawabanUser === soalSekarang.jawaban) {
+                skor += 10;
+                elFeedback.textContent = "✅ BENAR sekali!";
+                elFeedback.style.color = '#27ae60';
+            } else {
+                elFeedback.textContent = `❌ SALAH! Jawaban benar: ${soalSekarang.jawaban.charAt(0).toUpperCase() + soalSekarang.jawaban.slice(1)}`;
+                elFeedback.style.color = '#e74c3c';
+            }
+
+            elSkor.textContent = `Skor: ${skor}`;
+            indeksSoal++;
+            
+            // Tampilkan soal berikutnya setelah 1 detik
+            setTimeout(tampilkanSoal, 1000);
+        }
+
+        // Fungsi mulai ulang game
+        function mulaiUlang() {
+            skor = 0;
+            indeksSoal = 0;
+            elJawaban.style.display = 'inline-block';
+            elBtnJawab.style.display = 'inline-block';
+            elBtnUlang.style.display = 'none';
+            elSkor.textContent = `Skor: ${skor}`;
+            acakSoal();
+            tampilkanSoal();
+        }
+
+        // Event listener
+        elBtnJawab.addEventListener('click', cekJawaban);
+        elJawaban.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') cekJawaban();
+        });
+        elBtnUlang.addEventListener('click', mulaiUlang);
+
+        // Mulai game pertama kali
+        acakSoal();
+        tampilkanSoal();
+    </script>
+</body>
+</html>
